@@ -14,7 +14,7 @@ var imageObj = null;
 function init() {
     imageObj = new Image();
     imageObj.onload = function () { ctx.drawImage(imageObj, 0, 0); };
-    imageObj.src = 'images/test4.jpg';
+    imageObj.src = 'images/test3.jpg';
     canvas.addEventListener('mousedown', mouseDown, false);
     canvas.addEventListener('mouseup', mouseUp, false);
     canvas.addEventListener('mousemove', mouseMove, false);
@@ -45,16 +45,16 @@ function mouseMove(e) {
 init();
 function ocr(left,top,rw,rh){
     var imageData = ctx.getImageData(left,top,rw,rh);
-    var string = OCRAD(imageData);
-    document.getElementById('ocrTextArea').value ='';
-    document.getElementById('ocrTextArea').value = string;
-
+Tesseract.recognize(imageData)
+.then(function(result){
+      document.getElementById('ocrTextArea').value ='';
+    document.getElementById('ocrTextArea').value = result.text;
+    console.log(result)
+})
 }
  function crop(left,top,rw,rh){
     //Find the part of the image that is inside the crop box  
     crop_canvas_ctx.clearRect(0, 0, width, height);
     crop_canvas_ctx.drawImage(imageObj, left, top, rw, rh, 0, 0, rw, rh);
     ocr(left, top, rw, rh);
-    var base64=crop_canvas.toDataURL("image/png");
-  //  alert(base64);
   }
